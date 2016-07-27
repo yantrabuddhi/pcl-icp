@@ -96,6 +96,7 @@ iz++;
 }
 
 /*
+http://pointclouds.org/documentation/tutorials/iterative_closest_point.php
 Saved 5 data points to input:
     -0.92742 -0.315679 -0.2006
     -0.97877 -0.083598 -0.18715
