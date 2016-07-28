@@ -8,19 +8,28 @@ from geometry_msgs.msg import PoseStamped #for sound
 face_file = open("face_points.csv","w")
 snd_file  = open("sound_points.csv","w")
 
+face_raw = open("face_points.txt","w")
+snd_raw = open("sound_points.txt","w")
+
+def to_str(xx,yy,zz):
+    txt = str(xx)+" "+str(yy)+" "+str(zz)+"\n"
+    return txt
+
 def normalize(x,y,z):
     mag=sqrt(x*x+y*y+z*z)
     xx=x/mag
     yy=y/mag
     zz=z/mag
-    txt = str(xx)+" "+str(yy)+" "+str(zz)+"\n"
+    txt = to_str(xx,yy,zz)
     return
 
 def face_loc_cb(msg):
+    face_raw.write(to_str(msg.point.x,msg.point.y,msg.point.z))
     txt = normalize(msg.point.x,msg.point.y,msg.point.z)
     face_file.write(txt)
 
 def snd1_cb(msg):
+    snd_raw.write(to_str(msg.position.x,msg.position.y,msg.position.z))
     txt = normalize(msg.position.x,msg.position.y,msg.position.z)
     snd_file.write(txt)
 
@@ -31,3 +40,5 @@ rospy.Subscriber("/manyears/source_pose",PoseStamped, snd1_cb)
 rospy.spin()
 face_file.close()
 snd_file.close()
+face_raw.close()
+snd_raw.close()
