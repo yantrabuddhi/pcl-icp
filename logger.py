@@ -23,14 +23,15 @@ def normalize(x,y,z):
     txt = to_str(xx,yy,zz)
     return
 
-def face_loc_cb(msg):
+def face_loc_cb(imsg):
+    msg=imsg[0]
     face_raw.write(to_str(msg.point.x,msg.point.y,msg.point.z))
     txt = normalize(msg.point.x,msg.point.y,msg.point.z)
     face_file.write(txt)
 
 def snd1_cb(msg):
-    snd_raw.write(to_str(msg.position.x,msg.position.y,msg.position.z))
-    txt = normalize(msg.position.x,msg.position.y,msg.position.z)
+    snd_raw.write(to_str(msg.pose.position.x,msg.pose.position.y,msg.pose.position.z))
+    txt = normalize(msg.pose.position.x,msg.pose.position.y,msg.pose.position.z)
     snd_file.write(txt)
 
 rospy.init_node("FaceSoundLogger")
