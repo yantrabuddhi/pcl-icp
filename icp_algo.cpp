@@ -3,6 +3,54 @@
 #include <pcl/point_types.h>
 #include <pcl/registration/icp.h>
 
+#include <fstream>
+#include <string>
+#include <cstdio>
+using namespace std;
+
+int count_lines(string fname)
+{
+  ifstream fl(fname.c_str());
+  string line;
+  int lc=0;
+  if (fl.is_open())
+  {
+     while ( getline (fl,line) )
+     {
+       lc++;
+     }
+     fl.close();
+  }
+  return lc;
+}
+
+bool load_from_file(string fname,pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
+{
+  int lc=count_lines(fname);
+  if (lc<5) return false;
+  ifstream fl(fname.c_str());
+  string line;
+  float x,y,z;
+  cloud->width = lc;
+  cloud->height = 1;
+  cloud->is_dense = false;
+  cloud->points.resize(cloud->width*cloud->height);
+  size_t i=0;
+  if (fl.is_open())
+  {
+     while ( getline (fl,line) )
+     {
+       sscanf(line.c_str(),"%f %f %f",&x,&y,&z);
+       cloud->points[i].x = x;
+       cloud->points[i].y = y;
+       cloud->points[i].z = z;
+       i++;
+     }
+     fl.close();
+  }
+  return true;
+}
+
 int
  main (int argc, char** argv)
 {
@@ -10,25 +58,37 @@ int
   pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_out (new pcl::PointCloud<pcl::PointXYZ>);
 
   // Fill in the CloudIn data
+  if (! load_from_file("sound_points.csv",cloud_in))
+  {
+    cout<<"sound_points.csv insufficient"<<endl;
+    return -1;
+  }
+  if (! load_from_file("face_points.csv",cloud_out))
+  {
+    cout<<"face_points.csv insufficient"<<endl;
+    return -1;
+  }
+/*
   cloud_in->width    = 5;
   cloud_in->height   = 1;
   cloud_in->is_dense = false;
   cloud_in->points.resize (cloud_in->width * cloud_in->height);
-/*
+
   for (size_t i = 0; i < cloud_in->points.size (); ++i)
   {
     cloud_in->points[i].x = 1024 * rand () / (RAND_MAX + 1.0f);
     cloud_in->points[i].y = 1024 * rand () / (RAND_MAX + 1.0f);
     cloud_in->points[i].z = 1024 * rand () / (RAND_MAX + 1.0f);
   }
-*/
+
+
   cloud_out->width    = 5;
   cloud_out->height   = 1;
   cloud_out->is_dense = false;
   cloud_out->points.resize (cloud_out->width * cloud_out->height);
-
+*/
 //////data sound-in face_out normalized vectors
-
+/*
 size_t iz=0;
 cloud_in->points[iz].x =-0.92742;
 cloud_in->points[iz].y =-0.315679;
@@ -65,13 +125,15 @@ cloud_out->points[iz].x =0.89916;
 cloud_out->points[iz].y =-0.020529;
 cloud_out->points[iz].z =-0.437144;
 iz++;
-
+*/
 //////
   std::cout << "Saved " << cloud_in->points.size () << " data points to input:"
       << std::endl;
+/*
   for (size_t i = 0; i < cloud_in->points.size (); ++i) std::cout << "    " <<
       cloud_in->points[i].x << " " << cloud_in->points[i].y << " " <<
       cloud_in->points[i].z << std::endl;
+*/
 //  *cloud_out = *cloud_in;
   std::cout << "size:" << cloud_out->points.size() << std::endl;
 /*
@@ -80,9 +142,12 @@ iz++;
   std::cout << "Transformed " << cloud_in->points.size () << " data points:"
       << std::endl;
 */
+/*
   for (size_t i = 0; i < cloud_out->points.size (); ++i)
+
     std::cout << "    " << cloud_out->points[i].x << " " <<
       cloud_out->points[i].y << " " << cloud_out->points[i].z << std::endl;
+*/
   pcl::IterativeClosestPoint<pcl::PointXYZ, pcl::PointXYZ> icp;
   icp.setInputCloud(cloud_in);
   icp.setInputTarget(cloud_out);
