@@ -21,13 +21,14 @@ def normalize(x,y,z):
     yy=y/mag
     zz=z/mag
     txt = to_str(xx,yy,zz)
-    return
+    return txt
 
 def face_loc_cb(imsg):
-    msg=imsg[0]
-    face_raw.write(to_str(msg.point.x,msg.point.y,msg.point.z))
-    txt = normalize(msg.point.x,msg.point.y,msg.point.z)
-    face_file.write(txt)
+    if imsg.faces:
+        msg=imsg.faces[0]
+        face_raw.write(to_str(msg.point.x,msg.point.y,msg.point.z))
+        txt = normalize(msg.point.x,msg.point.y,msg.point.z)
+        face_file.write(txt)
 
 def snd1_cb(msg):
     snd_raw.write(to_str(msg.pose.position.x,msg.pose.position.y,msg.pose.position.z))
