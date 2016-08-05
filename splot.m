@@ -1,0 +1,18 @@
+sounds = load("sound_points.csv","-ascii");
+face = load("face_points.csv","-ascii");
+sx=sounds(:,1);
+sy=sounds(:,2);
+sz=sounds(:,3);
+fx=face(:,1);
+fy=face(:,2);
+fz=face(:,3);
+figure(1);
+scatter3(sx,sy,sz,[]);
+xlabel("x");ylabel("y");zlabel("z");title("sound source");
+figure(2);
+scatter3(fx,fy,fz,[]);
+xlabel("x");ylabel("y");zlabel("z");title("face points");
+[ax,ay,az]=av(sx,sy,sz,10);
+figure(3);
+scatter3(ax,ay,az,[]);
+xlabel("x");ylabel("y");zlabel("z");title("avg snd points");
